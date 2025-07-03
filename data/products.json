@@ -1,0 +1,19 @@
+[
+  {
+    "id": "f3559467-3280-40a5-95e6-7541e60e626f",
+    "name": "TMT Rebar 12mm",
+    "description": "High-strength rebar for concrete reinforcement in residential and commercial buildings. Complies with IS 1786 Fe500D.",
+    "category": "Steel Bar",
+    "grade": "Fe500D",
+    "dimensions": "12mm dia \u00d7 12m length",
+    "weight_per_unit": 10.66,
+    "base_price": 1.2,
+    "cutting_charge": 1.5,
+    "unit_of_measure": "length",
+    "finish": "Hot Rolled",
+    "stock_quantity": 250,
+    "min_order_quantity": 5,
+    "is_cuttable": true,
+    "is_active": true
+  }
+]

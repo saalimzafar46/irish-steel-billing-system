@@ -1,0 +1,87 @@
+name: Build Windows EXE
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements_standalone.txt
+        pip install pyinstaller
+    
+    - name: Build with PyInstaller
+      run: |
+        pyinstaller --onefile --console --hidden-import=streamlit.web.cli --hidden-import=streamlit --hidden-import=pandas --hidden-import=reportlab --hidden-import=webbrowser --hidden-import=threading --add-data "pages;pages" --add-data "models;models" --add-data "services;services" --add-data "utils;utils" --add-data "data;data" --add-data ".streamlit;.streamlit" --name "IrishSteelBilling" launcher.py
+    
+    - name: Test build
+      run: |
+        ls dist/
+    
+    - name: Upload EXE as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: IrishSteelBilling-Windows
+        path: dist/IrishSteelBilling.exe
+        retention-days: 30
+
+  create-release:
+    needs: build-windows
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    
+    steps:
+    - name: Download artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: IrishSteelBilling-Windows
+    
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.run_number }}
+        release_name: Irish Steel Billing v${{ github.run_number }}
+        body: |
+          Automated build of Irish Steel Billing System
+          
+          **Download Instructions:**
+          1. Download the `IrishSteelBilling.exe` file
+          2. Run the executable - it will start a local web server
+          3. Your browser will open automatically to the application
+          4. The application runs locally on your computer
+          
+          **Features:**
+          - Complete billing solution for Irish steel suppliers
+          - Professional PDF invoice generation
+          - Client and product management
+          - VAT compliance for Ireland
+        draft: false
+        prerelease: false
+    
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./IrishSteelBilling.exe
+        asset_name: IrishSteelBilling.exe
+        asset_content_type: application/octet-stream

@@ -1,0 +1,19 @@
+[
+  {
+    "id": "dcdc8613-d4d8-4182-b85e-8113ec04c82a",
+    "name": "Shannon Construction Ltd",
+    "contact_person": "Mr. Patrick O'Sullivan",
+    "address": "43 Limerick Road, Ennis, Co. Clare",
+    "city": "Ennis",
+    "county": "Clare",
+    "postal_code": "V95 H2X3",
+    "country": "Ireland",
+    "phone": "+353 65 123 4567",
+    "email": "posullivan@shannonconstruction.ie",
+    "vat_number": "IE9876543P",
+    "payment_terms": "30 days",
+    "credit_limit": 500.0,
+    "notes": "",
+    "created_date": "2025-07-02T22:54:26.284887"
+  }
+]
